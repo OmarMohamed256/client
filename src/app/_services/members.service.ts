@@ -62,7 +62,7 @@ export class MembersService {
   getMember(username: string | null){
     const member =[...this.memberCache.values()]
       .reduce((arr, elem) => arr.concat(elem.result), [])
-      .find((member: Member) => member.userName === username);
+      .find((member: Member) => member.username === username);
 
     if(member){
       return of(member);
@@ -85,6 +85,16 @@ export class MembersService {
   
   deletePhoto(photoId: number){
     return this.http.delete(this.baseUrl + 'users/delete-photo/'+ photoId);
+  }
+
+  addLike(username: string){
+    return this.http.post(this.baseUrl + 'likes/' + username, {})
+  }
+
+  getLikes(predicate: string, pageNumber: number, pageSize: number){
+    let params = this.getPaginationHeaders(pageNumber, pageSize)
+    params = params.append('predicate', predicate);
+    return this.getPaginatedResults<Partial<Member[]>>(this.baseUrl + 'likes', params);
   }
 
   private getPaginatedResults<T>(url: string, params: HttpParams) {
