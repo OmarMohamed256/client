@@ -8,7 +8,6 @@ import {
 import { Observable, of, take } from 'rxjs';
 import { AccountService } from '../_services/account.service';
 import { User } from '../_models/user';
-import { NonNullAssert } from '@angular/compiler';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
@@ -20,7 +19,8 @@ export class JwtInterceptor implements HttpInterceptor {
 
     this.accountService.currentUser$.pipe(take(1)).subscribe(user => currentUser = user );
 
-    if(currentUser !== null){
+    if(currentUser !== null &&  currentUser !== undefined){
+      console.log(currentUser)
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${currentUser.token}`
